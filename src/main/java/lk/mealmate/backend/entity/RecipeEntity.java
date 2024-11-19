@@ -46,7 +46,7 @@ public class RecipeEntity {
 
     @ManyToOne
     @JoinColumn(name = "adminId")
-    private AdminEntity adminEntity;
+    private Admin adminEntity;
 
     @ManyToOne
     @JoinColumn(name = "rateId")

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lk.mealmate.backend.dto.UserPwdDto;
-import lk.mealmate.backend.entity.AdminEntity;
+import lk.mealmate.backend.entity.Admin;
 import lk.mealmate.backend.repository.AdminRepository;
 import lk.mealmate.backend.service.AdminService;
 
@@ -17,8 +17,8 @@ public class AdminServiceImpl implements AdminService {
     private AdminRepository adminRepository;
 
     @Override
-    public AdminEntity changeUserPassword(Long id, UserPwdDto userPwdDto) {
-        AdminEntity adminEntity = adminRepository.findById(id).orElse(null);
+    public Admin changeUserPassword(Long id, UserPwdDto userPwdDto) {
+        Admin adminEntity = adminRepository.findById(id).orElse(null);
         System.out.println(userPwdDto.getPassword());
         if (adminEntity != null) {
             adminEntity.setPassword(userPwdDto.getPassword());
@@ -29,17 +29,17 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public AdminEntity createAdmin(AdminEntity adminEntity) {
+    public Admin createAdmin(Admin adminEntity) {
         return adminRepository.save(adminEntity);
     }
 
     @Override
-    public List<AdminEntity> getAllAdmins() {
+    public List<Admin> getAllAdmins() {
         return adminRepository.findAll();
     }
 
     @Override
-    public AdminEntity getAdminById(Long id) {
+    public Admin getAdminById(Long id) {
         return adminRepository.findById(id).orElse(null);
     }
 }

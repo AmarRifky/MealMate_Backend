@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lk.mealmate.backend.dto.UserPwdDto;
-import lk.mealmate.backend.entity.AdminEntity;
+import lk.mealmate.backend.entity.Admin;
 import lk.mealmate.backend.service.AdminService;
 
 @RestController
@@ -27,7 +27,7 @@ public class AdminController {
      * @return List of AdminEntity.
      */
     @GetMapping("/admins")
-    public List<AdminEntity> getAllAdmins(){
+    public List<Admin> getAllAdmins(){
         return adminService.getAllAdmins();
     }
 
@@ -37,7 +37,7 @@ public class AdminController {
      * @return The created AdminEntity.
      */
     @PostMapping("/admins")
-    public AdminEntity createAdmin(@RequestBody AdminEntity adminEntity){
+    public Admin createAdmin(@RequestBody Admin adminEntity){
         return adminService.createAdmin(adminEntity);
     }
 
@@ -47,7 +47,7 @@ public class AdminController {
      * @return The AdminEntity if found, or null if not.
      */
     @GetMapping("/admins/{id}")
-    public AdminEntity getAdminById(@PathVariable Long id){
+    public Admin getAdminById(@PathVariable Long id){
         return adminService.getAdminById(id);
     }
 
@@ -58,8 +58,8 @@ public class AdminController {
      * @return The updated AdminEntity with the new password.
      */
     @PutMapping("/admins/{id}/change-password")
-    public ResponseEntity<AdminEntity> changeUserPassword(@PathVariable Long id, @RequestBody UserPwdDto userPwdDto){
-        AdminEntity updatedAdmin = adminService.changeUserPassword(id, userPwdDto);
+    public ResponseEntity<Admin> changeUserPassword(@PathVariable Long id, @RequestBody UserPwdDto userPwdDto){
+        Admin updatedAdmin = adminService.changeUserPassword(id, userPwdDto);
         return updatedAdmin != null ? ResponseEntity.ok(updatedAdmin) : ResponseEntity.badRequest().build();
     }
 }

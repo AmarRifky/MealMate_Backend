@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lk.mealmate.backend.entity.User;
 import lk.mealmate.backend.entity.UserEntity;
 import lk.mealmate.backend.service.UserService;
 
@@ -30,8 +31,8 @@ public class UserController {
      * @return a list of UserEntity objects.
      */
     @GetMapping
-    public ResponseEntity<List<UserEntity>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 
     /**
@@ -41,8 +42,8 @@ public class UserController {
      * @return The UserEntity object corresponding to the given ID.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<UserEntity> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getAllUsersById(id));
+    public UserEntity getUserById(@PathVariable Long id) {
+        return userService.getAllUserById(id);
     }
 
     /**
@@ -52,8 +53,8 @@ public class UserController {
      * @return The created UserEntity object.
      */
     @PostMapping
-    public ResponseEntity<UserEntity> createUser(@RequestBody UserEntity updUserDto) {
-        return ResponseEntity.ok(userService.createUser(updUserDto));
+    public UserEntity createUser(@RequestBody User user){
+        return userService.createUser(user);
     }
 
     /**
@@ -63,8 +64,8 @@ public class UserController {
      * @return The updated UserEntity object.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<UserEntity> updateUser(@RequestBody UserEntity userEntity) {
-        return ResponseEntity.ok(userService.updateUser(userEntity));
+    public UserEntity updateUser(@PathVariable Long id, @RequestBody User user){
+        return userService.updateUser(id, user);
     }
 
     /**

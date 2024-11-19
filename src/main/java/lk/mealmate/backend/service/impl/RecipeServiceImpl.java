@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lk.mealmate.backend.dto.AddRecipeDto;
-import lk.mealmate.backend.entity.AdminEntity;
+import lk.mealmate.backend.entity.Admin;
 import lk.mealmate.backend.entity.RatingsEntity;
 import lk.mealmate.backend.entity.RecipeEntity;
 import lk.mealmate.backend.entity.UserEntity;
@@ -50,7 +50,7 @@ public class RecipeServiceImpl implements RecipeService{
     public RecipeEntity createRecipe(AddRecipeDto addRecipeDto) {
         RecipeEntity recipeEntity = new RecipeEntity();
         UserEntity userEntity = userRepository.findById(addRecipeDto.getUserID()).orElse(null);
-        AdminEntity adminEntity = adminRepository.findById(addRecipeDto.getAdminId()).orElse(null);
+        Admin adminEntity = adminRepository.findById(addRecipeDto.getAdminId()).orElse(null);
         RatingsEntity ratingsEntity = ratingsRepository.findById(addRecipeDto.getRateID()).orElse(null);
         recipeEntity.setRecipeName(addRecipeDto.getRecipeName());
         recipeEntity.setUserEntity(userEntity);

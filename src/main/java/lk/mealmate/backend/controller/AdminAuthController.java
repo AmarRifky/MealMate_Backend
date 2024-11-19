@@ -12,20 +12,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lk.mealmate.backend.dto.AuthResponse;
 import lk.mealmate.backend.dto.LoginDto;
-import lk.mealmate.backend.entity.AdminEntity;
-import lk.mealmate.backend.repository.AdminRepository;
+import lk.mealmate.backend.entity.Admin;
+import lk.mealmate.backend.repository.UserRepository;
+import lk.mealmate.backend.security.UserDetailsImpl;
 import lk.mealmate.backend.security.jwt.JwtUtils;
-import lk.mealmate.backend.service.AdminService;
+import lk.mealmate.backend.service.UserService;
 
 @RestController
 @CrossOrigin(origins = "*")
 public class AdminAuthController {
     @Autowired
-    AdminService adminService;
+    UserService userService;
 
     @Autowired
-    AdminRepository adminRepository;
+    UserRepository userRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -35,37 +37,32 @@ public class AdminAuthController {
 
     @Autowired
     JwtUtils jwtUtils;
-    
-    @PostMapping("/auth/admin/login") 
+
+    @PostMapping("/auth/admin/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDTO) {
 
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword())
-        );
+                new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtUtils.generateJwtToken(authentication);
-
-        return ResponseEntity.ok().body(token);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Long userId = userDetails.getId();
+        return ResponseEntity.ok().body(new AuthResponse(token, userId));
     }
 
     @PostMapping("/auth/admin/register")
-    public ResponseEntity<?> register(@RequestBody AdminEntity adminEntity) {
-        
-        if(adminRepository.existsByUsername(adminEntity.getUsername())) {
+    public ResponseEntity<?> register(@RequestBody Admin admin) {
+
+        if (userRepository.existsByUsername(admin.getUsername())) {
             return ResponseEntity.badRequest().body("Username is already in use");
         }
 
-        if(adminRepository.existsByEmail(adminEntity.getEmail())) {
+        if (userRepository.existsByEmail(admin.getEmail())) {
             return ResponseEntity.badRequest().body("This email is being used");
         }
 
-        AdminEntity newUser = new AdminEntity();
-        newUser.setUsername(adminEntity.getUsername());
-        newUser.setEmail(adminEntity.getEmail());
-        newUser.setPassword(passwordEncoder.encode(adminEntity.getPassword()));
-
-        return ResponseEntity.ok(adminService.createAdmin(newUser));
+        return ResponseEntity.ok(userService.createAdmin(admin));
     }
 }

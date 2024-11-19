@@ -5,12 +5,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import lk.mealmate.backend.dto.UserPwdDto;
-import lk.mealmate.backend.entity.AdminEntity;
+import lk.mealmate.backend.entity.Admin;
 
 @Service
 public interface AdminService {
-    AdminEntity createAdmin(AdminEntity adminEntity);
-    AdminEntity getAdminById(Long id);
-    List<AdminEntity> getAllAdmins();
-    AdminEntity changeUserPassword(Long id, UserPwdDto userPwdDto);
+    Admin createAdmin(Admin adminEntity);
+    Admin getAdminById(Long id);
+    List<Admin> getAllAdmins();
+    Admin changeUserPassword(Long id, UserPwdDto userPwdDto);
 }

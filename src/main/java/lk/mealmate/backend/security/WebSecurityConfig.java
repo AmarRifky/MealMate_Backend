@@ -60,21 +60,23 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf(csrf -> csrf.disable())
-            .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth ->
-                auth.requestMatchers("/auth/***",
-                "/auth/user/register",
-                "/auth/user/login",
-                "/auth/admin/register",
-                "/auth/admin/login",
-                "/v3/api-docs/**",
-                "v3/api-docs.yaml",
-                "/swagger-ui/**",
-                "/swagger-ui.html")
-                .permitAll()
-                .anyRequest().authenticated()
-            );
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/user/register",
+                                "/auth/user/login",
+                                "/auth/admin/register/**",
+                                "/auth/admin/login",
+                                // "/users/**",
+                                // "/admins/**",
+                                "/v3/api-docs/**",
+                                "v3/api-docs.yaml",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html")
+                        .permitAll()
+                        .requestMatchers("/auth/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/auth/user/**").hasRole("USER")
+                        .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
 

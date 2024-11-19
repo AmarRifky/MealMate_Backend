@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lk.mealmate.backend.dto.AuthResponse;
 import lk.mealmate.backend.dto.LoginDto;
-import lk.mealmate.backend.entity.UserEntity;
+import lk.mealmate.backend.entity.User;
 import lk.mealmate.backend.repository.UserRepository;
+import lk.mealmate.backend.security.UserDetailsImpl;
 import lk.mealmate.backend.security.jwt.JwtUtils;
 import lk.mealmate.backend.service.UserService;
 
@@ -35,37 +37,32 @@ public class UserAuthController {
 
     @Autowired
     JwtUtils jwtUtils;
-    
-    @PostMapping("/auth/user/login") 
+
+    @PostMapping("/auth/user/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDTO) {
 
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword())
-        );
+                new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtUtils.generateJwtToken(authentication);
-
-        return ResponseEntity.ok().body(token);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Long userId = userDetails.getId();
+        return ResponseEntity.ok().body(new AuthResponse(token, userId));
     }
 
     @PostMapping("/auth/user/register")
-    public ResponseEntity<?> register(@RequestBody UserEntity userEntity) {
+    public ResponseEntity<?> register(@RequestBody User user) {
         
-        if(userRepository.existsByUsername(userEntity.getUsername())) {
+        if(userRepository.existsByUsername(user.getUsername())) {
             return ResponseEntity.badRequest().body("Username is already in use");
         }
 
-        if(userRepository.existsByEmail(userEntity.getEmail())) {
+        if(userRepository.existsByEmail(user.getEmail())) {
             return ResponseEntity.badRequest().body("This email is being used");
         }
 
-        UserEntity newUser = new UserEntity();
-        newUser.setUsername(userEntity.getUsername());
-        newUser.setEmail(userEntity.getEmail());
-        newUser.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-
-        return ResponseEntity.ok(userService.createUser(newUser));
+        return ResponseEntity.ok(userService.createUser(user));
     }
 }

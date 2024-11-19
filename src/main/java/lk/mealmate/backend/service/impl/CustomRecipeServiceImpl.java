@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import lk.mealmate.backend.dto.CustomizedRecipeDto;
 import lk.mealmate.backend.dto.PersonalizedRecoDto;
-import lk.mealmate.backend.entity.AdminEntity;
+import lk.mealmate.backend.entity.Admin;
 import lk.mealmate.backend.entity.CustomizedRecipeEntity;
 import lk.mealmate.backend.entity.UserEntity;
 import lk.mealmate.backend.repository.AdminRepository;
@@ -37,7 +37,7 @@ public class CustomRecipeServiceImpl implements CustomRecipeService {
     public CustomizedRecipeEntity createCustomizedRecipe(CustomizedRecipeDto customizedRecipeDto) {
         CustomizedRecipeEntity entity = new CustomizedRecipeEntity();
         UserEntity userEntity = userRepository.findById(customizedRecipeDto.getUserID()).orElse(null);
-        AdminEntity adminEntity = adminRepository.findById(customizedRecipeDto.getAdminId()).orElse(null);
+        Admin adminEntity = adminRepository.findById(customizedRecipeDto.getAdminId()).orElse(null);
         entity.setUserEntity(userEntity);
         entity.setRecipeName(customizedRecipeDto.getRecipeName());
         entity.setCustomInstructions(customizedRecipeDto.getCustomInstructions());
