@@ -14,13 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lk.mealmate.backend.dto.UserPwdDto;
 import lk.mealmate.backend.entity.Admin;
+import lk.mealmate.backend.entity.User;
+import lk.mealmate.backend.entity.UserEntity;
 import lk.mealmate.backend.service.AdminService;
+import lk.mealmate.backend.service.UserService;
 
 @RestController
 @CrossOrigin(origins = "*")
 public class AdminController {
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * Retrieves all admin entities.
@@ -37,8 +43,8 @@ public class AdminController {
      * @return The created AdminEntity.
      */
     @PostMapping("/admins")
-    public Admin createAdmin(@RequestBody Admin adminEntity){
-        return adminService.createAdmin(adminEntity);
+    public UserEntity createAdmin(@RequestBody Admin admin){
+        return userService.createAdmin(admin);
     }
 
     /**

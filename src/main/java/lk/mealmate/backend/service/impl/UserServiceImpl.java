@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserEntity updateAdmin(Long id, Admin admin) {
         UserEntity existingAdmin = userRepository.findById(id).orElse(null);
-        if (existingAdmin!=null && existingAdmin instanceof User) {
+        if (existingAdmin!=null && existingAdmin instanceof Admin) {
             Admin admin2 = (Admin) existingAdmin;
             admin2.setUsername(admin.getUsername());
             admin2.setEmail(admin.getEmail());
